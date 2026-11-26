@@ -1,68 +1,44 @@
-# Python Data Integrity & File Monitoring Lab
+# 🛡️ Simulação Educacional de Ameaças em Python & Defesa Cibernética (Blue Team Lab)
 
-Laboratório educacional em Python voltado para o estudo prático de **integridade de arquivos**, **codificação simétrica em ambiente controlado** e **monitoramento contínuo de alterações em diretórios locais** utilizando hashes criptográficos SHA-256.
+![Python](https://img.shields.io/badge/Python_3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Cryptography](https://img.shields.io/badge/Fernet_AES--128-0F172A?style=for-the-badge&logo=letsencrypt&logoColor=white)
+![Blue Team](https://img.shields.io/badge/Endpoint_Defense_%26_EDR-0284C7?style=for-the-badge&logo=securityscorecard&logoColor=white)
+![DIO Lab](https://img.shields.io/badge/DIO_Cybersecurity_Lab-E11D48?style=for-the-badge)
 
-> **Aviso Educacional:** Todos os scripts deste repositório foram projetados exclusivamente para fins de estudo e auditoria em ambiente controlado, operando estritamente sobre a pasta local `./sandbox_files`.
+> **Aviso Ético e Legal (Disclaimer):** Todo o código, documentação e análise técnica deste repositório foram desenvolvidos exclusivamente para fins educacionais em ambiente controlado e isolado (`./sandbox_files`), visando compreender mecanismos de ameaças digitais para projetar defesas eficazes (Blue Team / EDR).
 
-## Estrutura do Projeto
+---
 
-```text
-Python-Data-Integrity-Lab/
-├── README.md
-├── .gitignore
-├── docs/
-│   └── SECURITY_GUIDELINES.md
-├── sandbox_files/
-│   ├── documento_financeiro.txt
-│   └── notas_projeto.txt
-└── scripts/
-    ├── directory_watcher.py
-    └── file_cipher_demo.py
-```
+## 📌 Visão Geral do Desafio
 
-## Componentes
+Este repositório documenta os estudos práticos sobre o funcionamento interno de duas classes clássicas de ameaças digitais — **Ransomware** e **Keylogger** — implementadas de forma controlada e segura em **Python**, acompanhadas de um monitor defensivo comportamental (`scripts/directory_watcher.py`) e um guia completo de mitigação (`docs/SECURITY_GUIDELINES.md`).
 
-- **`sandbox_files/`**: Diretório isolado contendo arquivos de texto fictícios utilizados nos testes de integridade e codificação.
-- **`scripts/file_cipher_demo.py`**: Utilitário educacional que aplica codificação simétrica via `cryptography.fernet.Fernet` (com fallback automático em Base64 caso a biblioteca `cryptography` não esteja instalada) exclusivamente nos arquivos de teste dentro de `./sandbox_files`, gera a chave local `chave.key`, registra um resumo em `NOTA_INFORMATIVA.txt` e restaura os arquivos originais com a flag `--restore`.
-- **`scripts/directory_watcher.py`**: Monitor de integridade que calcula hashes SHA-256 dos arquivos em `./sandbox_files` usando apenas a biblioteca padrão do Python (`os`, `hashlib` e `time`), emitindo um alerta de auditoria ao identificar modificações rápidas em lote.
-- **`docs/SECURITY_GUIDELINES.md`**: Guia técnico com boas práticas de proteção de endpoints, controle de acesso, firewall de saída, estratégia de backup 3-2-1 e autenticação multifator (MFA).
+### Objetivos Técnicos Cobertos
+* **Criptografia Simétrica Aplicada (`cryptography.fernet`):** Implementação segura de rotina de cifragem e decifragem restrita à pasta de laboratório `./sandbox_files`, com geração de nota informativa (`AVISO_SIMULACAO.txt`).
+* **Análise de Captura de Eventos e Exfiltração (`pynput` & `smtplib`):** Estudo arquitetural de como listeners de teclado capturam eventos de entrada, técnicas de execução em segundo plano (`.pyw` / processos sem console) e canais de envio via SMTP autenticado.
+* **Detecção Comportamental (Blue Team / EDR):** Simulação em Python de detecção de alterações rápidas de hash SHA-256 em diretórios sensíveis.
+* **Estratégias de Prevenção e Defesa:** Análise estruturada de Antivírus/EDR, Firewall de Egresso, Sandboxing, Backups 3-2-1 e Conscientização do Usuário.
 
-## Pré-requisitos
+---
 
-- Python 3.9+
-- (Opcional) Biblioteca `cryptography` para utilizar `Fernet`:
-  ```bash
-  pip install cryptography
-  ```
-  Caso `cryptography` não esteja instalada, `file_cipher_demo.py` utiliza automaticamente o modo de fallback em Base64.
+## 🏗️ Arquitetura do Estudo (Vetor de Ataque vs. Camada de Defesa)
 
-## Como Executar o Laboratório
+```mermaid
+flowchart TB
+    subgraph Lab["Ambiente Controlado (Sandbox Educacional)"]
+        direction LR
+        R["🔐 Módulo 1: Ransomware Simulado<br/>cryptography.fernet (AES-128-CBC + HMAC)<br/>Alvo restrito: ./sandbox_files/"]
+        K["⌨️ Módulo 2: Keylogger (Estudo Arquitetural)<br/>pynput.keyboard Listener + smtplib TLS<br/>Registro local & exfiltração controlada"]
+    end
 
-### 1. Iniciar o monitor de integridade (Terminal 1)
+    subgraph Defense["Camadas de Proteção & Mitigação (Blue Team)"]
+        D1["🛡️ EDR / Monitor Comportamental<br/>Detecção de I/O em massa & hooking de API"]
+        D2["🧱 Firewall de Egresso & DLP<br/>Bloqueio de SMTP/portas não autorizadas"]
+        D3["📦 Sandboxing & Menor Privilégio<br/>Execução isolada e bloqueio de scripts"]
+        D4["💾 Backup Imutável (Regra 3-2-1)<br/>Recuperação sem pagamento de resgate"]
+    end
 
-```bash
-python scripts/directory_watcher.py
-```
-
-Parâmetros opcionais:
-- `--interval 1.0`: intervalo de verificação em segundos.
-- `--window 10.0`: janela de tempo (em segundos) para correlação de eventos em lote.
-- `--threshold 2`: número mínimo de eventos na janela para disparar o alerta de auditoria.
-
-### 2. Executar o teste de codificação controlada (Terminal 2)
-
-Para codificar os arquivos de teste em `./sandbox_files`:
-
-```bash
-python scripts/file_cipher_demo.py
-```
-
-Para restaurar os arquivos originais:
-
-```bash
-python scripts/file_cipher_demo.py --restore
-```
-
-## Boas Práticas e Defesa
-
-Consulte o documento [docs/SECURITY_GUIDELINES.md](docs/SECURITY_GUIDELINES.md) para diretrizes completas de proteção de endpoints e resposta a alterações anômalas em sistemas de arquivos.
+    R --> D1
+    R --> D4
+    K --> D2
+    K --> D3
